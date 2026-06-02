@@ -1,3 +1,108 @@
+## Depixelate RSSHub Fork
+
+Depixelate RSSHub is a personal RSSHub fork that keeps custom `/depixelate/...` routes directly inside the RSSHub source tree while staying current with upstream RSSHub.
+
+I made it to have dependable personal RSS feeds for sites that do not provide good native feeds while still keeping up with RSSHub upstream updates automatically. It is useful for anyone who wants RSSHub plus private or personal routes without patching a running container by hand.
+
+### Prerequisites
+
+- Node.js 24 or another version allowed by RSSHub's `engines` field.
+- Corepack and pnpm using the version declared in `packageManager`.
+- Docker and Docker Compose for image and smoke-test workflows.
+- GitHub Actions, GHCR packages, and the Depixelate upstream-sync GitHub App configured for automation.
+
+### Install
+
+```bash
+corepack pnpm install --frozen-lockfile
+```
+
+The live deployment files belong in `/home/shuddown/rsshub-deploy`, not this source repository. The live server tracks `ghcr.io/depixelate/rsshub:latest`.
+
+### Testing
+
+Run fast Depixelate helper and parser tests:
+
+```bash
+corepack pnpm depixelate:test
+```
+
+Build RSSHub route assets:
+
+```bash
+corepack pnpm build:routes
+```
+
+Run a full RSSHub source build:
+
+```bash
+corepack pnpm build
+```
+
+Run smoke tests against a running RSSHub instance:
+
+```bash
+corepack pnpm depixelate:smoke -- --base-url http://127.0.0.1:1200
+```
+
+CI builds the Docker image, starts Redis, browserless, and RSSHub from that image, and then runs the Depixelate route smoke tests before publishing.
+
+### Usage
+
+The current custom feed is:
+
+```text
+http://localhost:1200/depixelate/adaptionlabs/blog
+```
+
+To add a route skeleton:
+
+```bash
+corepack pnpm depixelate:new-route example/site
+```
+
+Then implement the route under `lib/routes/depixelate`, update `depixelate/smoke-tests.yml`, run `corepack pnpm depixelate:test`, and use a PR into `depixelate/custom` so CI builds and smoke-tests the candidate image.
+
+### Automation
+
+- `depixelate/custom` is the production/default branch.
+- `master` stays a clean mirror of `DIYgod/RSSHub/master`.
+- Daily upstream sync creates or updates `sync/rsshub-upstream`, opens a PR, and enables auto-merge after candidate checks pass.
+- Candidate PRs build `ghcr.io/depixelate/rsshub:candidate-pr-<number>` and smoke-test that image.
+- Merged PRs promote the tested candidate digest to `latest` and `source-<tested-pr-head-sha>`.
+
+### Secrets
+
+Route secrets must be runtime environment variables, never committed code. Add required names to `depixelate/smoke-tests.yml` under `required_env`, put real local values in `.env`, and sync allowlisted keys to GitHub Actions:
+
+```bash
+corepack pnpm depixelate:sync-secrets -- --env-file .env --repo Depixelate/rsshub
+```
+
+The sync helper uses an allowlist derived from `depixelate/smoke-tests.yml`; it does not upload every key from `.env`.
+
+### Development Rules
+
+- Keep personal routes under `lib/routes/depixelate`.
+- Route URLs must stay under `/depixelate/...`.
+- Add or update `depixelate/smoke-tests.yml` whenever a custom route is added or changed.
+- Store secret names in `required_env`, but never store secret values in Git.
+- Prefer structured source data or public APIs over CSS-heavy page scraping.
+- Keep documentation and comments up to date when behavior changes.
+- After each self-contained change, run `/review`, inspect the diff manually, and commit before starting the next feature.
+
+### Contact
+
+To get in touch, email me at `sukesshvelusamy@gmail.com`.
+
+### Acknowledgments
+
+- [RSSHub](https://github.com/DIYgod/RSSHub)
+- [Watchtower](https://github.com/containrrr/watchtower)
+- [Browserless](https://www.browserless.io/)
+
+---
+
 <p align="center">
 <img src="https://docs.rsshub.app/img/logo.png" alt="RSSHub" width="100">
 </p>

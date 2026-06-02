@@ -1,5 +1,6 @@
 .DS_Store
 .cursorrules
+.codex-tools/
 .devenv
 .direnv
 .env
@@ -22,6 +23,7 @@
 app-minimal/
 assets/build/
 coverage
+demonstrations/
 docs/.vuepress/dist
 memory-bank/
 node_modules

@@ -125,3 +125,22 @@
 53. **Comments Language**: Write code comments in English for consistency and accessibility.
 
 54. **Parentheses in Arrow Functions**: Always use parentheses around arrow function parameters, even for single parameters.
+
+## Depixelate Project Notes
+
+This repository is the source repo for Depixelate's custom RSSHub image. Keep live deployment files in `/home/shuddown/rsshub-deploy`, not here.
+
+### Custom Routes
+
+- Keep personal routes under `lib/routes/depixelate`.
+- Route URLs must stay under `/depixelate/...`.
+- Add or update `depixelate/smoke-tests.yml` whenever a custom route is added or changed.
+- Store secret names in `required_env`, but never store secret values in Git.
+- Prefer structured source data or public APIs over CSS-heavy page scraping.
+
+### Verification
+
+- Run `corepack pnpm depixelate:test` after Depixelate helper or parser changes.
+- Run `corepack pnpm build:routes` after custom route changes.
+- CI is responsible for candidate Docker builds, container startup, and route smoke tests.
+- After each self-contained change, run `/review`, inspect the diff manually, and commit before starting the next feature.

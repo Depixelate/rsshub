@@ -1,0 +1,7 @@
+routes:
+    - name: Adaption Labs blog
+      url: /depixelate/adaptionlabs/blog
+      source: https://adaptionlabs.ai/blog
+      expected_status: 200
+      contains: Introducing the Public Sector Grant
+      required_env: []

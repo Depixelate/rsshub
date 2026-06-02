@@ -33,6 +33,10 @@
         "build:routes:worker": "cross-env NODE_ENV=dev WORKER_BUILD=true tsx scripts/workflow/build-routes.ts",
         "container-build": "tsdown --config ./tsdown-container.config.ts",
         "container-deploy": "npm run container-build && wrangler deploy --config wrangler-container.toml --containers-rollout=immediate",
+        "depixelate:new-route": "tsx depixelate/scripts/scaffold-route.ts",
+        "depixelate:smoke": "tsx depixelate/scripts/smoke-test.ts",
+        "depixelate:sync-secrets": "tsx depixelate/scripts/sync-secrets.ts",
+        "depixelate:test": "cross-env NODE_ENV=test vitest run depixelate/test",
         "dev": "cross-env NODE_ENV=dev NODE_OPTIONS='--max-http-header-size=32768' tsx watch --inspect --clear-screen=false lib/index.ts",
         "dev:cache": "cross-env NODE_ENV=production NODE_OPTIONS='--max-http-header-size=32768' tsx watch --clear-screen=false lib/index.ts",
         "eslint": "eslint --cache . --concurrency auto",
@@ -205,6 +209,7 @@
         "vite-tsconfig-paths": "6.1.1",
         "vitest": "4.1.8",
         "wrangler": "4.96.0",
+        "yaml": "2.9.0",
         "yaml-eslint-parser": "2.0.0"
     },
     "lint-staged": {
